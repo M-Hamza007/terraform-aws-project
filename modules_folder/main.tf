@@ -155,7 +155,16 @@ resource "aws_launch_configuration" "ubuntu" {
     security_groups = [aws_security_group.demoSG1.id]
     associate_public_ip_address = true
     # user_data = "${file("data.sh")}"
-    user_data = file("${path.module}/data.sh")
+    # user_data = file("${path.module}/data.sh")
+    user_data = <<-EOF
+                #!/bin/bash
+                sudo apt-get update
+                sudo apt-get install httpd
+                sudo apt-get install nginx -y
+                sudo echo "Hello, from terraform!!" >/var/www/html/index.nginx-debian.html
+                sudo service httpd start
+                chkconfig httpd on
+                EOF
     # to create new instances from a new launch configuration before destroying the old ones
     lifecycle {
         create_before_destroy = true
@@ -210,8 +219,8 @@ resource "aws_autoscaling_group" "demo_ASG" {
         create_before_destroy = true
     }
     tag {
-        key                 = "Machine"
-        value               = "Ubuntu"
+        key                 = "Name"
+        value               = "demo-asg"
         propagate_at_launch = true
     }
 }
