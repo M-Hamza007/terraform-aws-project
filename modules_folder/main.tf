@@ -208,7 +208,6 @@ resource "aws_autoscaling_group" "demo_ASG" {
     desired_capacity     = 4
     max_size             = 6
     health_check_type    = "ELB"
-    health_check_grace_period = 50
     target_group_arns = [ aws_alb_target_group.demo_tg.id ]
     vpc_zone_identifier  = [
         aws_subnet.private_subnets[0].id,
