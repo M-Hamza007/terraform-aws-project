@@ -154,17 +154,16 @@ resource "aws_launch_configuration" "ubuntu" {
     instance_type = "t2.micro"
     security_groups = [aws_security_group.demoSG1.id]
     associate_public_ip_address = true
-    # user_data = "${file("data.sh")}"
-    # user_data = file("${path.module}/data.sh")
-    user_data = <<-EOF
-                #!/bin/bash
-                sudo apt-get update
-                sudo apt-get install httpd
-                sudo apt-get install nginx -y
-                sudo echo "Hello, from terraform!!" >/var/www/html/index.nginx-debian.html
-                sudo service httpd start
-                chkconfig httpd on
-                EOF
+    user_data = file("data.sh")
+    # user_data = <<-EOF
+    #             #!/bin/bash
+    #             sudo apt-get update
+    #             sudo apt-get install httpd
+    #             sudo apt-get install nginx -y
+    #             sudo echo "Hello, from terraform!!" >/var/www/html/index.nginx-debian.html
+    #             sudo service httpd start
+    #             chkconfig httpd on
+    #             EOF
     # to create new instances from a new launch configuration before destroying the old ones
     lifecycle {
         create_before_destroy = true
